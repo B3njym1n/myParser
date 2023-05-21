@@ -1,4 +1,4 @@
 # My Pratt Parser Demo
 ## TODO
-- [x] parsing parenthesis
-- [x] all kinds of operators 
+- [ ] parsing parenthesis
+- [ ] all kinds of operators 
