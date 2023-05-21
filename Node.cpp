@@ -11,6 +11,12 @@ double numericNode::getValue()
 	return value;
 }
 
+std::string numericNode::display()
+{
+	
+	return std::to_string(value);
+}
+
 
 biopNode::biopNode(std::string sym):symbol(sym)
 {
@@ -23,12 +29,12 @@ std::string biopNode::getSymbol()
 	return symbol;
 }
 
-Node* biopNode::getLeftChild()
+std::string biopNode::display()
 {
-	return leftChild;
+	return symbol;
 }
 
-Node* biopNode::getRightChild()
+std::string Node::display()
 {
-	return rightChild;
+	return std::string();
 }

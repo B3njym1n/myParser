@@ -1,27 +1,5 @@
 #include "Parser.h"
 
-Node& parse(std::vector<Token>::iterator begin, std::vector<Token>::iterator end, double precedence)
-{
-    Token token = *begin;
-    Node leftNode = nud(token);
-    for (auto iter = begin + 1; iter < end; iter++)
-    {
-        Token next = *iter;
-        if (precedence < getTokenPredence(next.type).first)
-        {
-            biopNode Op(next.value);
-            Op.setLeftChild(&leftNode);
-            Node rightNode = parse(iter + 1, end, getTokenPredence(next.type).second);
-            Op.setRightChild(&rightNode);
-            leftNode = Op;
-        }
-        else
-        {
-            return leftNode;
-        }
-    }
-}
-
 std::pair<double,double> getTokenPredence(TokenType tokenType)
 {
     switch (tokenType)
@@ -69,14 +47,26 @@ std::pair<double,double> getTokenPredence(TokenType tokenType)
     return { 0.0, 0.0 };
 }
 
-Node nud(Token& token)
+Node* parse(Lexer& lex, double precedure)
 {
-    if (token.type == TokenType::NUMBER)
+    Token token = lex.consume();
+    Node* leftNode = new numericNode(token.value);
+    while (lex.hasNext())
     {
-        return numericNode(token.value);
+        Token next = lex.peek();
+        if (precedure < getTokenPredence(next.type).first)
+        {
+            Node* opNode = new biopNode(next.value);
+            ((biopNode*) opNode)->setLeftChild(leftNode);
+            lex.consume();
+            Node* right = parse(lex, getTokenPredence(next.type).second);
+            ((biopNode*)opNode)->setRightChild(right);
+            leftNode = opNode;
+        }
+        else
+        {
+            break;
+        }
     }
-    else if (token.type == TokenType::ADDORSUB || token.type == TokenType::MUTLIORDIV)
-    {
-        return biopNode(token.value);
-    }
+    return leftNode;
 }
