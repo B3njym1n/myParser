@@ -1,9 +1,24 @@
 ﻿#include <iostream>
 #include <string>
-#include <vector>
-#include <stack>
 #include "Lexer.h"
 #include "Parser.h"
+
+void display(Node* root, size_t n)
+{
+    for (int i = 0; i < n; ++i)
+    {
+        std::cout << " ";
+    }
+    std::cout << root->display() << '\n';
+    if (root->getLeftChild() != nullptr)
+    {
+        display(root->getLeftChild(), n*2);
+    }
+    if (root->getRightChild() != nullptr)
+    {
+        display(root->getRightChild(), n*2);
+    }
+}
 
 int main()
 {
@@ -11,23 +26,7 @@ int main()
 
     Node* root= parse(lexer, 0.0);
 
-    Node* tmp = root;
-    std::stack<Node*> stack;
-    stack.push(tmp);
-    while (!stack.empty())
-    {
-        Node* node = stack.top();
-        stack.pop();
-        std::cout << node->display() << std::endl;
-        if (node->getRightChild() != nullptr)
-        {
-            stack.push(node->getRightChild());
-        }
-        if (node->getLeftChild() != nullptr)
-        {
-            stack.push(node->getLeftChild());
-        }
-    }
+    display(root, 3);
 
     return 0;
 }
