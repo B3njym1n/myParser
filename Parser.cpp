@@ -47,10 +47,33 @@ std::pair<double,double> getTokenPredence(TokenType tokenType)
     return { 0.0, 0.0 };
 }
 
+Node* parenthesisParselet(Lexer& lex)
+{
+    Node* inner = parse(lex, 0);
+    lex.consume();
+    return inner;
+}
+
+Node* nud(Token& token, Lexer& lex)
+{
+    switch (token.type)
+    {
+    case TokenType::PARENTHESIS:
+        return parenthesisParselet(lex);
+        break;
+    case TokenType::NUMBER:
+        return new numericNode(token.value);
+        break;
+    default:
+        break;
+    }
+}
+
 Node* parse(Lexer& lex, double precedure)
 {
     Token token = lex.consume();
-    Node* leftNode = new numericNode(token.value);
+    //Node* leftNode = new numericNode(token.value);
+    Node* leftNode = nud(token, lex);
     while (lex.hasNext())
     {
         Token next = lex.peek();

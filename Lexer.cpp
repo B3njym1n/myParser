@@ -4,6 +4,13 @@
 Lexer::Lexer(std::string input): input{input}
 {
 	tokens = lex();
+#ifdef _DEBUG
+	for (auto token : tokens)
+	{
+		std::cout << " " << token.value;
+	}
+	std::cout << '\n';
+#endif // _DEBUG
 }
 
 Token Lexer::consume()
@@ -36,6 +43,11 @@ std::vector<Token> Lexer::lex()
 		if (nextChar == ' ')
 		{
 			pos++;
+		}
+		else if (nextChar == '(' || nextChar == ')')
+		{
+			pos++;
+			tokens.push_back(Token(TokenType::PARENTHESIS, std::string{nextChar}, pos));
 		}
 		// positive and negtive sign is solved by parser not lexer
 		else if (nextChar == '+' || nextChar == '-')
